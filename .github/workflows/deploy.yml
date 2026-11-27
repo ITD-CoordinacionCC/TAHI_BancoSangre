@@ -1,0 +1,30 @@
+# ==========================================================================
+#  Pieza: DEPLOY  (.github/workflows/deploy.yml)  -> reutilizable
+#  Publica el API .NET y sube el resultado como artefacto.
+#  Ajusta "TAHI_BancoSangre" si tu proyecto de arranque se llama distinto.
+# ==========================================================================
+name: TAHI_BancoSangre
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revision de codigo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publicar API (.NET)
+        run: dotnet publish ./TAHI_BancoSangre/TAHI_BancoSangre.csproj --configuration Release -o ./publish
+
+      - name: Subir artefacto publicado
+        uses: actions/upload-artifact@v4
+        with:
+          name: tahi-bancosangre-publish
+          path: ./publish

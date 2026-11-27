@@ -1,0 +1,51 @@
+# ==========================================================================
+#  Pieza: VARIABLES  (.github/workflows/variables.yml)  -> reutilizable
+#  Demuestra las variables por nivel y prepara el appsettings.
+# ==========================================================================
+name: TAHI_BancoSangre
+
+on:
+  workflow_call:          # <- reutilizable: la llama actions.yml
+
+# Variables de TODO el workflow
+env:
+  App_name: 'TAHI_BancoSangre'
+  Dotnet_Version: '10'
+
+jobs:
+  variables:
+    runs-on: ubuntu-latest
+
+    # Variable a nivel de JOB
+    env:
+      TipoEjecucion: 'Validacion de variables'
+
+    steps:
+      - name: Ejecutar checkout
+        uses: actions/checkout@v4
+
+      - name: Mostrar todas las variables
+        # Variable a nivel de STEP
+        env:
+          mensaje: Hola soy una variable
+        run: |
+          echo "Aplicacion: $App_name"
+          echo "Version de framework: $Dotnet_Version"
+          echo "Variable local: $TipoEjecucion"
+          echo "$mensaje"
+
+      - name: Variables del repositorio
+        run: |
+          echo "Descripcion: ${{ vars.PROYECT_DESCRIPTION }}"
+          echo "Workspace: $GITHUB_WORKSPACE"
+
+      - name: Reemplazar appsettings
+        shell: pwsh
+        run: |
+          $path = "$env:GITHUB_WORKSPACE\TAHI_BancoSangre\appsettings.json"
+          $json = Get-Content $path -Raw | ConvertFrom-Json
+          echo "antes..."
+          echo $json
+          # Aqui normalmente inyectas la cadena de conexion / secretos:
+          # $json.ConnectionStrings.Default = "${{ secrets.DB_CONNECTION }}"
+          # $json | ConvertTo-Json -Depth 10 | Set-Content $path

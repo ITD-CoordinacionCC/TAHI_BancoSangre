@@ -1,0 +1,26 @@
+# ==========================================================================
+#  Pieza: BUILD  (.github/workflows/build.yml)  -> reutilizable
+#  Compila la solucion .NET.
+# ==========================================================================
+name: TAHI_BancoSangre
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revision de codigo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restaurar dependencias
+        run: dotnet restore ./TAHI_BancoSangre.sln
+
+      - name: Compilar proyecto
+        run: dotnet build ./TAHI_BancoSangre.sln --configuration Release --no-restore

@@ -1,0 +1,26 @@
+# ==========================================================================
+#  Workflow PRINCIPAL / ORQUESTADOR  (.github/workflows/actions.yml)
+#  Se dispara en PR hacia develop y LLAMA a las 4 piezas reutilizables.
+#  Orden con needs:  build -> test -> deploy.
+# ==========================================================================
+name: TAHI_BancoSangre
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  variables:
+    uses: ./.github/workflows/variables.yml
+
+  build:
+    uses: ./.github/workflows/build.yml
+
+  test:
+    needs: build          # solo prueba si el build paso
+    uses: ./.github/workflows/test.yml
+
+  deploy:
+    needs: test           # solo publica si las pruebas pasaron
+    uses: ./.github/workflows/deploy.yml

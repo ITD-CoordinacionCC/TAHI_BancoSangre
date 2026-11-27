@@ -1,0 +1,23 @@
+# ==========================================================================
+#  Pieza: TEST  (.github/workflows/test.yml)  -> reutilizable
+#  Corre las pruebas con cobertura sobre la solucion .NET.
+# ==========================================================================
+name: TAHI_BancoSangre
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revision de codigo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Ejecutar pruebas con cobertura de codigo
+        run: dotnet test ./TAHI_BancoSangre.sln --configuration Release --collect:"XPlat Code Coverage"
